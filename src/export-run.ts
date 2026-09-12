@@ -10,6 +10,8 @@ import JSZip from 'jszip';
 import { assemble } from './assemble';
 import type { SourceIndex } from './assemble';
 import type { ExportPlan, ExportSettings } from './export-plan';
+import type { Overlay } from './overlays';
+import { imageSize, renderText } from './text-image';
 import { renderThumbnail } from './thumbnails';
 import type { WorkPage } from './types';
 
@@ -21,6 +23,10 @@ export interface ExportResult {
 
 export interface RunOptions {
 	onProgress?: (done: number, total: number) => void;
+	/** 모든 장에 얹을 것들. PDF 로 받을 때만 쓰인다. */
+	overlays?: readonly Overlay[];
+	/** 폼 입력값을 굳힐지. */
+	flattenForms?: boolean;
 }
 
 /**
@@ -57,6 +63,13 @@ export async function runExport(
 			const bytes = await assemble(slice, sources, {
 				protection: settings.protection,
 				pdfa: settings.pdfa,
+				flattenForms: options.flattenForms,
+				overlays: options.overlays,
+				/*
+					글자를 그림으로 굽는 수단을 여기서 주입한다. `assemble` 은 캔버스를
+					모르므로 node 에서 테스트되고, 브라우저에서만 진짜 렌더러가 붙는다.
+				*/
+				renderer: { renderText, imageSize },
 				onProgress: step
 			});
 			built.push({

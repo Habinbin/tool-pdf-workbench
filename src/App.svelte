@@ -18,6 +18,7 @@
 	import SectionLabel from './ui/SectionLabel.svelte';
 	import TextField from './ui/TextField.svelte';
 	import ExportPanel from './components/ExportPanel.svelte';
+	import OverlayPanel from './components/OverlayPanel.svelte';
 	import PageGrid from './components/PageGrid.svelte';
 	import { isFileDrag } from './drag-source.svelte';
 	import { loadFile, sortForImport } from './load';
@@ -95,6 +96,8 @@
 		bench.exporting = { done: 0, total: bench.pages.length };
 		try {
 			const result = await runExport(plan, bench.pages, bench.sources, bench.exportSettings, {
+				overlays: bench.overlays,
+				flattenForms: bench.flattenForms,
 				onProgress: (done, total) => (bench.exporting = { done, total })
 			});
 			download(result);
@@ -206,7 +209,18 @@
 				</footer>
 			</main>
 
-			<ExportPanel {bench} onexport={() => void doExport()} />
+			<!--
+				패널의 **자리는 고정**이고 내용만 바뀐다. 덧입히기를 켜면 그 설정이
+				들어오고 끝내면 내보내기로 돌아온다 — 그래서 화면의 주 행동이 늘
+				하나다 (@tool-ux-principles §2, @layout-consistency #3).
+			-->
+			<aside class="panel">
+				{#if bench.view === 'export'}
+					<ExportPanel {bench} onexport={() => void doExport()} />
+				{:else}
+					<OverlayPanel {bench} view={bench.view} />
+				{/if}
+			</aside>
 		</div>
 	{/if}
 
@@ -274,6 +288,16 @@
 		flex: 1;
 		flex-direction: column;
 		min-width: 0;
+	}
+
+	/* 패널의 껍데기는 여기가 소유한다 — 내용이 바뀌어도 폭과 경계선이 움직이지 않는다. */
+	.panel {
+		display: flex;
+		width: var(--pane-w);
+		flex: none;
+		flex-direction: column;
+		border-left: 1px solid var(--line);
+		background-color: var(--surface);
 	}
 
 	.toolbar {

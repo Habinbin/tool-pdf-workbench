@@ -9,7 +9,11 @@ import { moveToGap, nudge, removeFile, removePages, rotatePages } from './pages'
 import { baseNameFrom } from './naming';
 import type { GapIndex } from './pages';
 import type { ExportSettings, OutputFormat } from './export-plan';
+import type { Anchor, NumberFormat, Overlay } from './overlays';
 import type { SourceFile, WorkPage } from './types';
+
+/** 오른쪽 패널이 지금 무엇을 보여 주는가. 자리는 고정, 내용만 바뀐다. */
+export type PanelView = 'export' | 'numbering' | 'watermark' | 'stamp' | 'crop';
 
 /** 사용자에게 보여 줄 한 줄짜리 알림. 스스로 사라지지 않는다 — 사용자가 닫는다. */
 export interface Notice {
@@ -47,6 +51,101 @@ export class Workbench {
 
 	/** 내보내는 중인가. */
 	exporting = $state<{ done: number; total: number } | null>(null);
+
+	/* ── 오른쪽 패널 ─────────────────────────────── */
+
+	/**
+	 * 패널이 보여 주는 것. 덧입히기를 켜면 그 설정으로 바뀌고, 끝내면
+	 * 내보내기로 돌아온다 — 그래서 주 행동이 늘 하나다 (@tool-ux-principles §2).
+	 */
+	view = $state<PanelView>('export');
+
+	/* ── 덧입히기 ────────────────────────────────── */
+
+	numberingOn = $state(false);
+	numberAnchor = $state<Anchor>('bottom-center');
+	numberFormat = $state<NumberFormat>('plain');
+	numberStartAt = $state(1);
+	numberSkipFirst = $state(0);
+
+	watermarkOn = $state(false);
+	watermarkText = $state('');
+	watermarkOpacity = $state(0.15);
+	watermarkAngle = $state(45);
+
+	stampOn = $state(false);
+	stampBytes = $state<ArrayBuffer | null>(null);
+	stampMime = $state('image/png');
+	stampName = $state('');
+	stampAnchor = $state<Anchor>('bottom-right');
+	stampWidth = $state(0.2);
+
+	cropOn = $state(false);
+	cropTop = $state(0);
+	cropRight = $state(0);
+	cropBottom = $state(0);
+	cropLeft = $state(0);
+
+	flattenForms = $state(false);
+
+	/** 지금 켜져 있는 덧입히기들. 그리는 순서대로. */
+	get overlays(): Overlay[] {
+		const list: Overlay[] = [];
+
+		// 자르기를 먼저 — 좁아진 창 안에 나머지를 얹어야 잘려 나가지 않는다.
+		if (this.cropOn) {
+			list.push({
+				kind: 'crop',
+				top: this.cropTop,
+				right: this.cropRight,
+				bottom: this.cropBottom,
+				left: this.cropLeft
+			});
+		}
+
+		if (this.watermarkOn && this.watermarkText.trim() !== '') {
+			list.push({
+				kind: 'watermark',
+				text: this.watermarkText,
+				opacity: this.watermarkOpacity,
+				angle: this.watermarkAngle,
+				// 글자 수가 많을수록 작게 — 긴 문구가 페이지를 넘지 않게.
+				fontSize: Math.max(18, 72 - this.watermarkText.trim().length * 3)
+			});
+		}
+
+		if (this.stampOn && this.stampBytes !== null) {
+			list.push({
+				kind: 'stamp',
+				bytes: this.stampBytes,
+				mime: this.stampMime,
+				anchor: this.stampAnchor,
+				widthRatio: this.stampWidth,
+				opacity: 1
+			});
+		}
+
+		// 쪽번호는 맨 위 — 워터마크에 가리면 읽을 수 없다.
+		if (this.numberingOn) {
+			list.push({
+				kind: 'numbering',
+				anchor: this.numberAnchor,
+				format: this.numberFormat,
+				startAt: this.numberStartAt,
+				skipFirst: this.numberSkipFirst,
+				fontSize: 10
+			});
+		}
+
+		return list;
+	}
+
+	/** 덧입히기 중 실제로 켜진 것의 수. 목록에 배지로 보여 준다. */
+	get activeOverlayCount(): number {
+		return this.overlays.length;
+	}
+
+	/* ── 내보내기 ────────────────────────────────── */
 
 	format = $state<OutputFormat>('pdf');
 	splitPages = $state(false);
@@ -186,5 +285,6 @@ export class Workbench {
 		this.passwordPrompt = null;
 		this.#baseNameTouched = false;
 		this.#baseName = '';
+		this.view = 'export';
 	}
 }

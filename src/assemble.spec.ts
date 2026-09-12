@@ -248,3 +248,123 @@ describe('경계', () => {
 		expect(seen).toEqual([1, 2, 3]);
 	});
 });
+
+/**
+ * 오버레이는 `renderer` 를 주입받으므로 node 에서도 검증된다 — 캔버스 없이
+ * 가짜 렌더러로 "그려졌는가 · 어디에 그려졌는가" 를 확인한다.
+ */
+describe('덧입히기', () => {
+	/** 1×1 투명 PNG 를 주는 가짜 렌더러. 크기만 그럴듯하면 기하 검증에 충분하다. */
+	const renderer = {
+		async renderText(text: string, style: { fontSize: number }) {
+			return {
+				bytes: RED_PNG.slice().buffer as ArrayBuffer,
+				width: text.length * style.fontSize * 0.6,
+				height: style.fontSize * 1.3
+			};
+		},
+		async imageSize() {
+			return { width: 1, height: 1 };
+		}
+	};
+
+	const numbering = {
+		kind: 'numbering' as const,
+		anchor: 'bottom-center' as const,
+		format: 'plain' as const,
+		startAt: 1,
+		skipFirst: 0,
+		fontSize: 10
+	};
+
+	it('쪽번호를 얹어도 장수와 순서가 그대로다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0), page('a', 1)], sources, {
+			overlays: [numbering],
+			renderer
+		});
+		expect(await pageCountOf(bytes)).toBe(2);
+	});
+
+	it('renderer 가 없으면 조용히 건너뛴다 — 조립을 실패시키지 않는다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0)], sources, { overlays: [numbering] });
+		expect(await pageCountOf(bytes)).toBe(1);
+	});
+
+	it('자르기는 CropBox 를 좁힌다 — 내용은 그대로 둔다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0)], sources, {
+			overlays: [{ kind: 'crop', top: 0.1, right: 0.1, bottom: 0.1, left: 0.1 }]
+		});
+		const doc = await PDFDocument.load(bytes.slice().buffer as ArrayBuffer);
+		const cropped = doc.getPage(0).getCropBox();
+		// 원본은 400×600.
+		expect(cropped.width).toBeCloseTo(320);
+		expect(cropped.height).toBeCloseTo(480);
+		// MediaBox 는 건드리지 않는다 — 되돌릴 수 있어야 한다.
+		expect(doc.getPage(0).getMediaBox().width).toBeCloseTo(400);
+	});
+
+	it('워터마크를 얹어도 본문 텍스트가 살아 있다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0)], sources, {
+			overlays: [{ kind: 'watermark', text: '대외비', opacity: 0.2, angle: 45, fontSize: 48 }],
+			renderer
+		});
+		expect(new TextDecoder('latin1').decode(bytes)).toContain('/Font');
+	});
+
+	it('스탬프는 렌더러 없이도 얹힌다 — 이미 그림이다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0)], sources, {
+			overlays: [
+				{
+					kind: 'stamp',
+					bytes: RED_PNG.slice().buffer as ArrayBuffer,
+					mime: 'image/png',
+					anchor: 'bottom-right',
+					widthRatio: 0.2,
+					opacity: 1
+				}
+			]
+		});
+		expect(await pageCountOf(bytes)).toBe(1);
+	});
+
+	it('여러 개를 겹쳐 얹을 수 있다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0)], sources, {
+			overlays: [
+				numbering,
+				{ kind: 'watermark', text: '초안', opacity: 0.15, angle: 45, fontSize: 40 },
+				{ kind: 'crop', top: 0.05, right: 0.05, bottom: 0.05, left: 0.05 }
+			],
+			renderer
+		});
+		expect(await pageCountOf(bytes)).toBe(1);
+	});
+
+	it('폼 평탄화는 폼이 없어도 실패하지 않는다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		const bytes = await assemble([page('a', 0)], sources, { flattenForms: true });
+		expect(await pageCountOf(bytes)).toBe(1);
+	});
+
+	it('건너뛴 장에는 번호를 얹지 않는다', async () => {
+		const sources = new Map([['a', source('a', threePages)]]);
+		let asked = 0;
+		const counting = {
+			...renderer,
+			async renderText(text: string, style: { fontSize: number }) {
+				asked += 1;
+				return renderer.renderText(text, style);
+			}
+		};
+		await assemble([page('a', 0), page('a', 1), page('a', 2)], sources, {
+			overlays: [{ ...numbering, skipFirst: 1 }],
+			renderer: counting
+		});
+		expect(asked).toBe(2);
+	});
+});
