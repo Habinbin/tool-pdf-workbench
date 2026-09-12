@@ -9,9 +9,10 @@
  * 한 파일이 실패해도 나머지는 올라간다 (@failure-checklist-first §오염된 입력).
  */
 
-import { PDFDocument } from '@cantoo/pdf-lib';
+import type { PDFDocument } from '@cantoo/pdf-lib';
 
 import { naturalCompare } from './naming';
+import { pdfLib } from './pdf-lib-lazy';
 import type { SourceFile, WorkPage } from './types';
 
 /** 페이지로 넣을 수 있는 이미지 형식. pdf-lib 이 삽입할 수 있는 것만. */
@@ -89,6 +90,8 @@ export async function loadFile(file: File, password?: string): Promise<LoadOutco
 			reason: 'PDF 나 이미지(PNG · JPG)만 넣을 수 있습니다.'
 		};
 	}
+
+	const { PDFDocument } = await pdfLib();
 
 	let doc: PDFDocument;
 	try {

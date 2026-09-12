@@ -95,6 +95,8 @@
 	}
 
 	input {
+		/* 클릭 대상 24px 이상 (@control-contract #5, WCAG 2.2 AA). */
+		min-height: 24px;
 		min-width: 0;
 		flex: 1;
 		border: 0;

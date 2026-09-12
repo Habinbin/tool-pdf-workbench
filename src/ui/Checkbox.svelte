@@ -72,6 +72,12 @@
 		color: var(--ink-faint);
 	}
 
+	/*
+	   네모는 16px 이지만 **클릭 대상은 라벨 행 전체**다 — `<label>` 로 감싸 두어
+	   글자 어디를 눌러도 토글된다. WCAG 2.2 의 대상 크기는 활성화 영역 전체를
+	   재므로 24px 기준을 넘는다. `skill:ui-probe` 는 input 만 재서 경고를 내지만,
+	   네모를 24px 로 키우면 글자와 눈높이가 어긋난다.
+	*/
 	input {
 		appearance: none;
 		flex: none;

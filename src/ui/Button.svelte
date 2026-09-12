@@ -5,6 +5,12 @@
 	다른 굵기(bold·semibold)로 그려졌다. 같은 행동이 화면마다 다르게 보이면
 	사용자는 그게 같은 행동인지 매번 확인해야 한다.
 	색·모서리는 계약 토큰에서 오므로 툴박스가 값을 바꾸면 전부 함께 바뀐다.
+
+	`skill:ui-probe` 의 `control-variant-sprawl` 은 한 화면의 `<button>` 을 모양별로
+	세는데, 작업대에서는 다섯이 나온다. 셋은 이 정의의 변형(sm · md · block)이고,
+	나머지 둘은 버튼 태그를 쓰지만 버튼이 아니다 — 드롭 영역(180px 짜리 면)과
+	아이콘 버튼(@ui/IconButton)이다. 태그로 세면 섞이지만 사용자에게는 서로
+	다른 종류의 것이므로, 억지로 하나로 맞추지 않는다.
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';

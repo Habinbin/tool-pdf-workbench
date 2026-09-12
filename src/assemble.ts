@@ -6,8 +6,9 @@
  * 그림이 되고 용량이 몇 배로 뛴다 — 병합했더니 검색이 안 된다는 사고가 거기서 난다.
  */
 
-import { PDFDocument, degrees } from '@cantoo/pdf-lib';
+import type { PDFDocument } from '@cantoo/pdf-lib';
 
+import { pdfLib } from './pdf-lib-lazy';
 import type { SourceFile, WorkPage } from './types';
 
 /** 내보내기에 걸 수 있는 암호. 둘 다 비면 암호를 걸지 않는다. */
@@ -91,6 +92,7 @@ export async function assemble(
 		(options.protection?.ownerPassword ?? '') !== '';
 	if (options.pdfa === true && hasPassword) throw new ConflictingOptionsError();
 
+	const { PDFDocument, degrees } = await pdfLib();
 	const out = await PDFDocument.create();
 
 	/*

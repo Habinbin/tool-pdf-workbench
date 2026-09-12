@@ -23,8 +23,14 @@
 
 	/* ── 글자 ─────────────────────────────────────── */
 	--ink: var(--betlab-ink, #1d1d1f);
-	--ink-muted: var(--betlab-ink-muted, #6e6e73);
-	--ink-faint: var(--betlab-ink-faint, #8e8e93);
+	/*
+	   스펙의 회색(#6e6e73 · #8e8e93)보다 한 단 어둡다. 스펙 값 그대로는 12px
+	   글자에서 대비가 2.99:1 까지 떨어져 WCAG AA(4.5:1)에 못 미친다 —
+	   `skill:ui-probe` 가 구역 라벨·요약·힌트에서 잡아냈다. 스펙은 참고이지
+	   족쇄가 아니므로(@design-contract) 읽히는 쪽을 택한다.
+	*/
+	--ink-muted: var(--betlab-ink-muted, #5a5a5f);
+	--ink-faint: var(--betlab-ink-faint, #6e6e73);
 
 	/* ── 주 행동 ──────────────────────────────────── */
 	--accent: var(--betlab-accent, #0071e3);
