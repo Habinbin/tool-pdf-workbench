@@ -1,0 +1,18 @@
+{
+	// 이 파일은 생성물을 extends 하지 않는다. 프레임워크가 sync 로 만들어 주는 tsconfig 는
+	// gitignore 대상이라, 이 툴이 툴박스에 submodule 로 실리면 아무도 여기서 sync 를 돌리지
+	// 않아 존재하지 않는다. 툴박스 번들러는 `src/**` 를 변환할 때 가장 가까운 tsconfig 를
+	// 읽으므로, 없는 파일을 가리키면 툴박스 빌드가 통째로 "Tsconfig not found" 로 죽는다.
+	// 생성물에 기대는 검사(단독 껍데기 `app/`)는 `tsconfig.app.json` 이 맡는다 — 합치지 말 것.
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
+		"noEmit": true,
+		"types": ["vitest/globals", "node"]
+	},
+	"include": ["src/**/*.ts"]
+}

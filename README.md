@@ -11,12 +11,12 @@ iLovePDF 는 30개 툴을 6개 카테고리(Organize / Optimize / Convert / Edit
 
 같은 19개 기능을 **사용자가 묻는 질문**으로 다시 나누면 네 자리로 접힌다.
 
-| 사용자가 묻는 것 | iLovePDF 의 해당 툴 | 여기서의 정체 |
-| --- | --- | --- |
-| 뭘 가지고 시작하지 | Merge · JPG to PDF · Scan · Unlock · Repair | **입력** |
-| 페이지를 어떻게 배치하지 | Organize · Remove · Extract · Rotate | **직접 조작** |
-| 위에 뭘 얹지 | Page numbers · Watermark · Sign · Crop · Forms | **덧입히기** |
-| 어떤 형태로 받지 | Split · Compress · Protect · PDF/A · to JPG · to Markdown | **내보내기 옵션** |
+| 사용자가 묻는 것         | iLovePDF 의 해당 툴                                       | 여기서의 정체     |
+| ------------------------ | --------------------------------------------------------- | ----------------- |
+| 뭘 가지고 시작하지       | Merge · JPG to PDF · Scan · Unlock · Repair               | **입력**          |
+| 페이지를 어떻게 배치하지 | Organize · Remove · Extract · Rotate                      | **직접 조작**     |
+| 위에 뭘 얹지             | Page numbers · Watermark · Sign · Crop · Forms            | **덧입히기**      |
+| 어떤 형태로 받지         | Split · Compress · Protect · PDF/A · to JPG · to Markdown | **내보내기 옵션** |
 
 세 가지가 따라 나온다.
 
@@ -31,12 +31,12 @@ iLovePDF 는 30개 툴을 6개 카테고리(Organize / Optimize / Convert / Edit
 
 ## 클릭 예산
 
-| 작업 | 행동 수 | iLovePDF |
-| --- | --- | --- |
-| 병합 | **2** — 드롭 → 내보내기 | 5 |
-| 분할 · 정렬 · 회전 · 압축 · 암호 | **3** — 드롭 → 조작 → 내보내기 | 5 |
-| 압축 + 암호 동시 | **3** | 10 |
-| 워터마크 · 번호 · 서명 | **5** — 드롭 → 선택 → 입력 → 적용 → 내보내기 | 5 |
+| 작업                             | 행동 수                                      | iLovePDF |
+| -------------------------------- | -------------------------------------------- | -------- |
+| 병합                             | **2** — 드롭 → 내보내기                      | 5        |
+| 분할 · 정렬 · 회전 · 압축 · 암호 | **3** — 드롭 → 조작 → 내보내기               | 5        |
+| 압축 + 암호 동시                 | **3**                                        | 10       |
+| 워터마크 · 번호 · 서명           | **5** — 드롭 → 선택 → 입력 → 적용 → 내보내기 | 5        |
 
 묻지 않고 정하는 것:
 
@@ -113,18 +113,18 @@ iLovePDF 는 30개 툴을 6개 카테고리(Organize / Optimize / Convert / Edit
 
 **안 넣는 것** — 브라우저에서 불가능하거나 서버 키가 필요하다.
 
-| 기능 | 이유 |
-| --- | --- |
+| 기능                 | 이유                                                            |
+| -------------------- | --------------------------------------------------------------- |
 | Word/PPT/Excel ↔ PDF | LibreOffice wasm 은 100MB+ 에 불안정. 2026 현재 프로덕션 부적합 |
-| AI 요약 · 번역 | 서버 키가 필요하다 (@client-first-processing 예외 1) |
-| 압축 · OCR | 2차. wasm(qpdf 1.3MB / tesseract kor 15MB)이 추가로 붙는다 |
+| AI 요약 · 번역       | 서버 키가 필요하다 (@client-first-processing 예외 1)            |
+| 압축 · OCR           | 2차. wasm(qpdf 1.3MB / tesseract kor 15MB)이 추가로 붙는다      |
 
 ## 라이브러리
 
-| 쓰는 것 | 라이선스 | 왜 |
-| --- | --- | --- |
-| `@cantoo/pdf-lib` | MIT | pdf-lib 드롭인 포크. **암호화·복호화·PDF/A·손상복구**가 여기에만 있다 |
-| `pdfjs-dist` | Apache-2.0 | 썸네일 렌더, 텍스트 추출 |
-| `jszip` | MIT | 분할 결과 · PDF→JPG 를 ZIP 으로 |
+| 쓰는 것           | 라이선스   | 왜                                                                    |
+| ----------------- | ---------- | --------------------------------------------------------------------- |
+| `@cantoo/pdf-lib` | MIT        | pdf-lib 드롭인 포크. **암호화·복호화·PDF/A·손상복구**가 여기에만 있다 |
+| `pdfjs-dist`      | Apache-2.0 | 썸네일 렌더, 텍스트 추출                                              |
+| `jszip`           | MIT        | 분할 결과 · PDF→JPG 를 ZIP 으로                                       |
 
 `mupdf` 는 기능이 더 많지만 **AGPL-3.0** 이라 공개 배포 시 소스 공개 의무가 붙는다. 제외.

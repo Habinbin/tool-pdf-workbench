@@ -1,0 +1,2 @@
+minimumReleaseAgeExclude:
+  - '@cantoo/pdf-lib@2.11.0'

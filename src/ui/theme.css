@@ -1,0 +1,137 @@
+/**
+ * 이 툴의 시각 토큰.
+ *
+ * 계약 토큰(`--betlab-*`)은 호스트가 정의할 수 있고, 없으면 여기 적힌 기본값을 쓴다.
+ * 그래서 툴은 혼자서도 제대로 보이고, 툴박스에 묶이면 툴박스가 정한 모습으로 바뀐다.
+ * 툴을 고칠 필요가 없다. @theme-contract
+ *
+ * 기본값의 출발점: .agents/design/apple (Apple Style Reference)
+ *
+ * `:root` 가 아니라 `.tool-root` 에 거는 이유: 이 툴은 자기 사이트로도 뜨고 툴박스 안
+ * 한 페이지로도 뜬다. 전역을 오염시키면 호스트의 다른 화면이 물든다.
+ */
+
+.tool-root {
+	/* ── 면 ───────────────────────────────────────── */
+	--surface: var(--betlab-surface, #ffffff);
+	--surface-raised: var(--betlab-surface-raised, #f5f5f7);
+	--surface-sunken: var(--betlab-surface-sunken, #e2e2e5);
+
+	/* ── 선 ───────────────────────────────────────── */
+	--line: var(--betlab-line, #d2d2d7);
+	--line-strong: var(--betlab-line-strong, #b8b8bd);
+
+	/* ── 글자 ─────────────────────────────────────── */
+	--ink: var(--betlab-ink, #1d1d1f);
+	--ink-muted: var(--betlab-ink-muted, #6e6e73);
+	--ink-faint: var(--betlab-ink-faint, #8e8e93);
+
+	/* ── 주 행동 ──────────────────────────────────── */
+	--accent: var(--betlab-accent, #0071e3);
+	--accent-hover: var(--betlab-accent-hover, #0066cc);
+	--on-accent: var(--betlab-on-accent, #ffffff);
+
+	/* ── 의미 ─────────────────────────────────────── */
+	--danger: var(--betlab-danger, #d70015);
+	--success: var(--betlab-success, #248a3d);
+	--warning: var(--betlab-warning, #b25000);
+
+	/* ── 서체 ─────────────────────────────────────────
+	   한글·라틴·숫자를 한 글꼴이 처리한다. 두 글꼴을 짝지으면 한 줄 안에서
+	   x-height 가 달라 미세하게 어긋난다. @typography-and-language */
+	--font: var(
+		--betlab-font,
+		'Noto Sans KR Variable',
+		'Noto Sans KR',
+		ui-sans-serif,
+		system-ui,
+		sans-serif
+	);
+	--font-mono: var(--betlab-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+
+	/* ── 모양 ─────────────────────────────────────── */
+	--radius-control: var(--betlab-radius-control, 8px);
+	--radius-panel: var(--betlab-radius-panel, 12px);
+	--radius-pill: var(--betlab-radius-pill, 980px);
+
+	/* ── 이 툴의 것 (계약 밖) ─────────────────────────
+	   간격은 계약에 넣지 않는다. 목록 사이가 얼마나 떨어져야 읽기 좋은지는
+	   이 화면을 만든 쪽이 안다. @theme-contract */
+	/* 컨트롤 안쪽 여백 — 그 컨트롤의 크기이지 계층이 아니다. */
+	--space-4: 4px;
+	--space-8: 8px;
+	--space-12: 12px;
+	--space-16: 16px;
+	--space-20: 20px;
+	--space-24: 24px;
+	--space-32: 32px;
+	--space-40: 40px;
+
+	/*
+	 * 계층 사다리 — 형제 사이의 거리만 정한다.
+	 *
+	 * 인접한 단은 2배로 벌어진다. 사람은 길이를 차이가 아니라 비율로 보기 때문에,
+	 * 16 과 24 는 같아 보이고 16 과 32 는 다르게 보인다. 간격이 전부 비슷하면
+	 * 화면이 한 덩어리로 읽힌다. @spacing-ladder
+	 */
+	--gap-l1: 32px;
+	--gap-l2: 16px;
+	--gap-l3: 8px;
+	--gap-l4: 4px;
+
+	/*
+	 * 좌우 패널의 기본 폭. 사용자가 경계를 끌면 인라인 값이 이를 덮고,
+	 * 그 값은 localStorage 에 남는다.
+	 */
+	--pane-w: 288px;
+
+	/* 모달 뒤를 덮는 막. */
+	--scrim: rgb(0 0 0 / 0.35);
+
+	/*
+	 * 종이. 영수증과 A4 미리보기가 그려지는 바탕이다 — 테마가 어두워져도 종이는
+	 * 희어야 하므로 --surface 를 쓰지 않는다. 출력물이 흰 종이이기 때문이다.
+	 */
+	--paper: #ffffff;
+
+	/* 종이 위에 겹치는 선택 표시. 밑의 내용이 비쳐야 하므로 반투명이다. */
+	--wash-weak: rgb(0 0 0 / 0.05);
+	--wash: rgb(0 0 0 / 0.1);
+	--wash-drop: rgb(0 0 0 / 0.08);
+
+	--text-caption: 12px;
+	--text-body-sm: 14px;
+	--text-body: 15px;
+	--text-title: 20px;
+}
+
+.tool-root {
+	color: var(--ink);
+	font-family: var(--font);
+	font-size: var(--text-body);
+	line-height: 1.5;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+.tool-root *,
+.tool-root *::before,
+.tool-root *::after {
+	box-sizing: border-box;
+}
+
+.tool-root :focus-visible {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+/*
+ * 호스트 CSS 로부터 폼 컨트롤을 지킨다. 툴박스가 @tailwindcss/forms 를 쓰면
+ * input 포커스 링을 box-shadow 로 그려서 링이 두 겹이 된다.
+ */
+.tool-root input,
+.tool-root button,
+.tool-root textarea,
+.tool-root select {
+	box-shadow: none;
+}

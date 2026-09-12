@@ -1,0 +1,18 @@
+<!--
+	manifest 의 아이콘(lucide `presentation`)과 같은 도형이다.
+	런처 카드와 탭이 다른 그림을 쓰면 같은 툴로 안 보인다.
+	선 색은 툴 기본 강조색(`--betlab-accent` 폴백)과 같은 값 — 파일에서는 토큰을 못 쓴다.
+-->
+<svg
+	xmlns="http://www.w3.org/2000/svg"
+	viewBox="0 0 24 24"
+	fill="none"
+	stroke="#0071e3"
+	stroke-width="2"
+	stroke-linecap="round"
+	stroke-linejoin="round"
+>
+	<path d="M2 3h20" />
+	<path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3" />
+	<path d="m7 21 5-5 5 5" />
+</svg>

@@ -1,0 +1,17 @@
+{
+	// 단독 껍데기(`app/`) 전용 타입 검사 설정. `svelte-kit sync` 가 만들어 주는 생성물을
+	// extends 해야 `$lib` 별칭과 라우트 타입이 풀리는데, 루트 `tsconfig.json` 에서 그걸
+	// 하면 툴박스가 이 툴을 submodule 로 실었을 때 없는 파일을 가리켜 빌드가 죽는다.
+	// 그래서 생성물에 기대는 검사만 여기로 뺀다 — 다시 합치지 말 것.
+	"extends": "./.svelte-kit/tsconfig.json",
+	"compilerOptions": {
+		"target": "ES2022",
+		"module": "ESNext",
+		"moduleResolution": "bundler",
+		"strict": true,
+		"verbatimModuleSyntax": true,
+		"skipLibCheck": true,
+		"noEmit": true,
+		"types": ["vitest/globals", "node"]
+	}
+}
